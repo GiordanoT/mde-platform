@@ -1,0 +1,14 @@
+# Port of the service
+server:
+  port: 9010
+       
+# Service configuration
+eureka:
+  client:
+    registerWithEureka: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER}
+  instance:
+    lease-renewal-interval-in-seconds: 30

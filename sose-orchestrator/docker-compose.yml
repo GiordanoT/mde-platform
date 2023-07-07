@@ -1,0 +1,248 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql
+    restart: always
+    ports:
+      - 3306:3306
+    volumes:
+      - ./mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    restart: always
+    ports:
+      - 80:80
+    links:
+      - 'mysql:db'
+    depends_on:
+      - mysql
+
+  config-server:
+    build: ./services/config-server
+    container_name: config
+    restart: always
+    ports:
+      - 8000:8000
+
+  discovery-server:
+    build: ./services/discovery-server
+    container_name: discovery
+    restart: always
+    ports:
+      - 8761:8761
+    depends_on:
+      - config-server
+
+  user-microservice:
+    build: ./services/user
+    container_name: user
+    restart: always
+    ports:
+      - 9001:9001
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+      MYSQL_HOST: mysql:3306
+      MYSQL_DB: sose_project
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  epackage-microservice:
+    build: ./services/e-package
+    container_name: epackage
+    restart: always
+    ports:
+      - 9002:9002
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+      MYSQL_HOST: mysql:3306
+      MYSQL_DB: sose_project
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  eclass-microservice:
+    build: ./services/e-class
+    container_name: eclass
+    restart: always
+    ports:
+      - 9003:9003
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+      MYSQL_HOST: mysql:3306
+      MYSQL_DB: sose_project
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  eattribute-microservice:
+    build: ./services/e-attribute
+    container_name: eattribute
+    restart: always
+    ports:
+      - 9004:9004
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+      MYSQL_HOST: mysql:3306
+      MYSQL_DB: sose_project
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  metamodel-microservice:
+    build: ./services/m2-prosumer
+    container_name: metamodel
+    restart: always
+    ports:
+      - 9005:9005
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  eobject-microservice:
+    build: ./services/e-object
+    container_name: eobject
+    restart: always
+    ports:
+      - 9006:9006
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+      MYSQL_HOST: mysql:3306
+      MYSQL_DB: sose_project
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  evalue-microservice:
+    build: ./services/e-value
+    container_name: evalue
+    restart: always
+    ports:
+      - 9007:9007
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+      MYSQL_HOST: mysql:3306
+      MYSQL_DB: sose_project
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  model-microservice:
+    build: ./services/m1-prosumer
+    container_name: model
+    restart: always
+    ports:
+      - 9008:9008
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  aggregator-microservice:
+    build: ./services/aggregator
+    container_name: aggregator
+    restart: always
+    ports:
+      - 9009:9009
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  soap-microservice:
+    build: ./services/soap-service
+    container_name: soap
+    restart: always
+    ports:
+      - 9010:9010
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+    depends_on:
+      - config-server
+      - discovery-server
+      - mysql 
+
+  gateway-microservice:
+    build: ./services/gateway
+    container_name: gateway
+    restart: always
+    ports:
+      - 9000:9000
+    environment:
+      CONFIG_SERVER_HOST: config-server
+      CONFIG_SERVER_PORT: 8000
+      EUREKA_SERVER: http://discovery-server:8761/eureka/
+    depends_on:
+      - config-server
+      - discovery-server
+      - epackage-microservice
+      - eclass-microservice
+      - eattribute-microservice
+      - metamodel-microservice
+      - eobject-microservice
+      - evalue-microservice
+      - model-microservice
+      - aggregator-microservice
+
+  client:
+    build: ./client
+    container_name: client
+    restart: always
+    ports:
+      - 3000:3000
+    depends_on:
+      - gateway-microservice
+
+volumes:
+  mysql-data:

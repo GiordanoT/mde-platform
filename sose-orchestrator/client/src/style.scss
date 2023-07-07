@@ -1,0 +1,14 @@
+html{ height: 100%; width: 100%; z-index: -1 }
+body { height: 100%; width: 100%; background-color: whitesmoke; }
+button { padding: 0.2em !important; }
+label { font-size: 0.9rem; }
+.select, .input {
+  width: 15em;
+  height: 1.8em;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+}
+select:focus, input:focus {
+  outline: none;
+  border: 1px dashed rgba(0, 0, 0, 0.25);
+}
+.rounded { border-radius: 0.3em; }

@@ -1,0 +1,58 @@
+.EModel {
+  height: 100%;
+  width: 100%;
+  background-image: url('../../static/svg/graph.svg');
+  background-repeat: repeat;
+  z-index: 1;
+}
+
+.EPackage {
+  position: absolute !important; background-color: white;
+  min-height: 20em; min-width: 25em;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-left: 0.25em solid #845EC2 !important;
+  z-index: 2;
+  & > .name{
+    color: #845EC2;
+  }
+}
+
+.EClass {
+  position: absolute !important; background-color: white;
+  min-height: 6em; min-width: 10em;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-left: 0.25em solid #2C73D2 !important;
+  z-index: 3;
+  & > .name{
+    color: #2C73D2;
+  }
+}
+
+.EAttribute {
+  border: 1px solid rgba(0, 0, 0, 0);
+  position: relative; display: flex;
+  width: 100%;
+  z-index: 4;
+}
+
+.EObject {
+  position: absolute !important; background-color: white;
+  min-height: 6em; min-width: 10em;
+  border: 1px solid rgba(0, 0, 0, 0.25);
+  border-left: 0.25em solid #008F7A !important;
+  z-index: 3;
+  & > .name{
+    color: #008F7A;
+  }
+}
+
+.EValue {
+  border: 1px solid rgba(0, 0, 0, 0);
+  position: relative; display: flex;
+  width: 100%;
+  z-index: 4;
+}
+
+.selected {
+  border: 1px dashed indigo;
+}

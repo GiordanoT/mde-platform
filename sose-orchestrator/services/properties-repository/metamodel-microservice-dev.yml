@@ -1,0 +1,23 @@
+# Port of the user service
+server:
+  port: 9005
+       
+# Service configuration
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  info:
+    env:
+      enabled: true
+  
+eureka:
+  client:
+    registerWithEureka: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER}
+  instance:
+    lease-renewal-interval-in-seconds: 30

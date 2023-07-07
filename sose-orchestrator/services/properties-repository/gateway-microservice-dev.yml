@@ -1,0 +1,99 @@
+# Port of the gateway
+server:
+  port: 9000
+
+# Gateway configuration
+spring:
+  cloud:
+    gateway:
+      default-filters:
+        - DedupeResponseHeader=Access-Control-Allow-Credentials Access-Control-Allow-Origin
+      globalcors:
+        corsConfigurations:
+          '[/**]':
+              allowedOrigins: "*"
+              allowedMethods: "*"
+              allowedHeaders: "*"
+      routes:
+        - id: user_route
+          uri: lb://user-microservice
+          predicates:
+          - Path=/api/user/**
+          filters:
+          - RewritePath=/api/user(?<segment>), /user$\{segment}
+
+        - id: package_route
+          uri: lb://package-microservice
+          predicates:
+          - Path=/api/package/**
+          filters:
+          - RewritePath=/api/package(?<segment>), /package$\{segment}
+
+        - id: class_route
+          uri: lb://class-microservice
+          predicates:
+          - Path=/api/class/**
+          filters:
+          - RewritePath=/api/class(?<segment>), /class$\{segment}
+
+        - id: attribute_route
+          uri: lb://attribute-microservice
+          predicates:
+          - Path=/api/attribute/**
+          filters:
+          - RewritePath=/api/attribute(?<segment>), /attribute$\{segment}
+
+        - id: metamodel_route
+          uri: lb://metamodel-microservice
+          predicates:
+          - Path=/api/metamodel/**
+          filters:
+          - RewritePath=/api/metamodel(?<segment>), /metamodel$\{segment}
+
+        - id: object_route
+          uri: lb://object-microservice
+          predicates:
+          - Path=/api/object/**
+          filters:
+          - RewritePath=/api/object(?<segment>), /object$\{segment}
+
+        - id: value_route
+          uri: lb://value-microservice
+          predicates:
+          - Path=/api/value/**
+          filters:
+          - RewritePath=/api/value(?<segment>), /value$\{segment}
+
+        - id: model_route
+          uri: lb://model-microservice
+          predicates:
+          - Path=/api/model/**
+          filters:
+          - RewritePath=/api/model(?<segment>), /model$\{segment}
+
+        - id: aggregator_route
+          uri: lb://aggregator-microservice
+          predicates:
+          - Path=/api/aggregator/**
+          filters:
+          - RewritePath=/api/aggregator(?<segment>), /aggregator$\{segment}
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,refresh
+
+eureka:
+  client:
+    registerWithEureka: true
+    healthcheck:
+      enabled: true
+    serviceUrl:
+      defaultZone: ${EUREKA_SERVER}
+  instance:
+    lease-renewal-interval-in-seconds: 30
+
+  
+
